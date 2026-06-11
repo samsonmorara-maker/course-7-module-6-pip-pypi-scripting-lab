@@ -1,19 +1,36 @@
+import requests
 from datetime import datetime
 import os
 
-def generate_log(data):
-    if not isinstance(data, list):
-        raise ValueError("data must be a list")
-    
-    filename = f"log_{datetime.now().strftime('%Y%m%d')}.txt"
-    
+def fetch_post():
+    response = requests.get(
+        "https://jsonplaceholder.typicode.com/posts/1"
+    )
+
+    if response.status_code == 200:
+        return response.json()
+
+    return None
+
+
+def write_post(post):
+    filename = (
+        f"post_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    )
+
     with open(filename, "w") as file:
-        for entry in data:
-            file.write(f"{entry}\n")
-    
-    print(f"Log written to {filename}")
-    return filename
+        file.write(f"Title: {post['title']}\n\n")
+        file.write(f"Body: {post['body']}")
+
+    print(f"File saved as {filename}")
+
 
 if __name__ == "__main__":
-    log_data = ["User logged in", "User updated profile", "Report exported"]
-    generate_log(log_data)
+    print("Fetching data...")
+
+    post = fetch_post()
+
+    if post:
+        write_post(post)
+    else:
+        print("Failed to fetch data.")
