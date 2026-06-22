@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import os
 
 def generate_log(log_data):
     if not isinstance(log_data, list):
